@@ -14,7 +14,7 @@ function create() {
     __dirname,
     "../../renderer/pages/control/index.html"
   );
-  console.log(url);
+
   win.loadURL(`file://${url}`);
 }
 
