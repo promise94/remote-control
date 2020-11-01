@@ -2,7 +2,7 @@
  * @Author: lixiaowei
  * @Date: 2020-10-16 12:33:25
  * @LastEditors: lixiaowei
- * @LastEditTime: 2020-10-28 12:38:25
+ * @LastEditTime: 2020-11-01 22:20:05
  * @Description: file content
  * @FilePath: /geektime-electron/remote-control/app/main/index.js
  */
@@ -15,7 +15,7 @@ const { create: createControlWindow } = require("./windows/control");
 const robot = require("./robot");
 
 app.on("ready", () => {
-  createControlWindow();
+  createMainWindow();
   ipcHandle();
   robot();
 });

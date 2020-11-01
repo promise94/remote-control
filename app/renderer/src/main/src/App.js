@@ -2,12 +2,13 @@
  * @Author: lixiaowei
  * @Date: 2020-10-16 12:31:34
  * @LastEditors: lixiaowei
- * @LastEditTime: 2020-10-20 21:55:56
+ * @LastEditTime: 2020-11-01 21:48:36
  * @Description: file content
  * @FilePath: /geektime-electron/remote-control/app/renderer/src/main/src/App.js
  */
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import "./peer-puppet";
 
 import { ipcRenderer } from "electron";
 

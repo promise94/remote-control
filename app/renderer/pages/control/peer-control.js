@@ -1,57 +1,8 @@
 const EventEmitters = require("events");
+const { ipcRenderer } = require("electron");
 const peer = new EventEmitters();
 
-const { desktopCapturer, ipcRenderer } = require("electron");
-
-async function getScreenSteam() {
-  const screens = await desktopCapturer.getSources({
-    types: ["screen", "window"],
-  });
-  console.log(screens);
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: false,
-      video: {
-        mandatory: {
-          chromeMediaSource: "desktop",
-          chromeMediaSourceId: screens[screens.length - 1].id,
-          maxWidth: window.screen.width,
-          maxHeight: window.screen.height,
-        },
-      },
-    });
-    console.log(stream);
-    peer.emit("add-stream", stream);
-  } catch (e) {
-    console.dir(e);
-  }
-
-  /*   const sources = await desktopCapturer.getSources({ types: ["screen"] });
-
-  navigator.webkitGetUserMedia(
-    {
-      audio: false,
-      video: {
-        mandatory: {
-          chromeMediaSource: "desktop",
-          chromeMediaSourceId: sources[0].id,
-          maxWidth: window.screen.width,
-          maxHeight: window.screen.height,
-        },
-      },
-    },
-    (stream) => {
-      peer.emit("add-stream", stream);
-    },
-    (err) => {
-      //handle err
-      console.error(err);
-    }
-  ); */
-}
-getScreenSteam();
-
-peer.on("robot", (type, data) => {
+/* peer.on("robot", (type, data) => {
   console.log(type, data);
   if (type === "mouse") {
     data.screen = {
@@ -60,6 +11,31 @@ peer.on("robot", (type, data) => {
     };
   }
   ipcRenderer.invoke("robot", type, data);
-});
+}); */
+
+const pc = new RTCPeerConnection();
+
+async function createOffer() {
+  const offer = await pc.createOffer({
+    offerToReceiveAudio: false,
+    offerToReceiveVideo: true,
+  });
+  await pc.setLocalDescription(offer);
+  console.log(JSON.stringify(offer));
+  return pc.localDescription;
+}
+
+createOffer();
+
+async function setRemote(answer) {
+  await pc.setRemoteDescription(answer);
+}
+
+window.setRemote = setRemote;
+
+pc.onaddstream = function (e) {
+  console.log("add stream", e.stream);
+  peer.emit("add-stream", e.stream);
+};
 
 module.exports = peer;
