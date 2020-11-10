@@ -56,6 +56,25 @@ async function getScreenSteam() {
 }
 const pc = new RTCPeerConnection({});
 
+pc.onicecandidate = (e) => {
+  console.log("candidate: ", JSON.stringify(e.candidate));
+};
+
+let candidates = [];
+async function addIceCandidate(candidate) {
+  if (candidate) {
+    candidates.push(candidate);
+    if (pc.remoteDescription && pc.remoteDescription.type) {
+      for (let i = 0; i < candidates.length; i++) {
+        await pc.addIceCandidate(candidates[i]);
+      }
+      candidates = [];
+    }
+  }
+}
+
+window.addIceCandidate = addIceCandidate;
+
 async function createAnswer(offer) {
   const screenStream = await getScreenSteam();
   pc.addStream(screenStream);
