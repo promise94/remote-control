@@ -57,12 +57,13 @@ async function getScreenSteam() {
 const pc = new RTCPeerConnection({});
 
 pc.onicecandidate = (e) => {
-  console.log("candidate: ", JSON.stringify(e.candidate));
+  console.log("candidate: ", e.candidate);
+  ipcRenderer.send("forward", "puppet-candidate", e.candidate);
 };
 
 let candidates = [];
 async function addIceCandidate(candidate) {
-  if (candidate) {
+  if (candidate && candidate.type) {
     candidates.push(candidate);
     if (pc.remoteDescription && pc.remoteDescription.type) {
       for (let i = 0; i < candidates.length; i++) {
@@ -79,10 +80,19 @@ async function createAnswer(offer) {
   const screenStream = await getScreenSteam();
   pc.addStream(screenStream);
 
-  pc.setRemoteDescription(offer);
-  pc.setLocalDescription(await pc.createAnswer());
+  await pc.setRemoteDescription(offer);
+  await pc.setLocalDescription(await pc.createAnswer());
   console.log("answer: ", JSON.stringify(pc.localDescription));
   return pc.localDescription;
 }
+
+ipcRenderer.on("offer", (e, offer) => {
+  createAnswer(offer).then((answer) => {
+    ipcRenderer.send("forward", "answer", {
+      type: answer.type,
+      sdp: answer.sdp,
+    });
+  });
+});
 
 window.createAnswer = createAnswer;

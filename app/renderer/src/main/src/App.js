@@ -2,9 +2,9 @@
  * @Author: lixiaowei
  * @Date: 2020-10-16 12:31:34
  * @LastEditors: lixiaowei
- * @LastEditTime: 2020-11-01 21:48:36
+ * @LastEditTime: 2020-11-12 21:51:56
  * @Description: file content
- * @FilePath: /geektime-electron/remote-control/app/renderer/src/main/src/App.js
+ * @FilePath: /signal/Users/lixiaowei/Documents/projects/Electron/geektime-electron/remote-control/app/renderer/src/main/src/App.js
  */
 import React, { useState, useEffect } from "react";
 import "./App.css";

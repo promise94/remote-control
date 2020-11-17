@@ -18,4 +18,8 @@ function create() {
   win.loadURL(`file://${url}`);
 }
 
-module.exports = { create };
+function send(channel, ...args) {
+  win.webContents.send(channel, ...args);
+}
+
+module.exports = { create, send };
