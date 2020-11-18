@@ -2,18 +2,27 @@ const EventEmitters = require("events");
 const { ipcRenderer } = require("electron");
 const peer = new EventEmitters();
 
-/* peer.on("robot", (type, data) => {
-  console.log(type, data);
-  if (type === "mouse") {
-    data.screen = {
-      width: window.screen.width,
-      height: window.screen.height,
-    };
-  }
-  ipcRenderer.invoke("robot", type, data);
-}); */
-
 const pc = new RTCPeerConnection();
+const dc = pc.createDataChannel("robotchannel");
+
+dc.onopen = function (e) {
+  console.log("data channel 建立成功！");
+  peer.on("robot", (type, data) => {
+    console.log(type, data);
+    if (type === "mouse") {
+      data.screen = {
+        width: window.screen.width,
+        height: window.screen.height,
+      };
+    }
+    // ipcRenderer.invoke("robot", type, data);
+    dc.send(JSON.stringify({ type, data }));
+  });
+};
+
+dc.onerror = function (e) {
+  console.log("channel error: ", e);
+};
 
 async function createOffer() {
   const offer = await pc.createOffer({

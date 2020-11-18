@@ -56,6 +56,19 @@ async function getScreenSteam() {
 }
 const pc = new RTCPeerConnection({});
 
+pc.ondatachannel = (e) => {
+  console.log("ondatachannel", e);
+  e.channel.onmessage = (e) => {
+    console.log("message", e);
+    try {
+      const { type, data } = JSON.parse(e.data);
+      ipcRenderer.invoke("robot", type, data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
 pc.onicecandidate = (e) => {
   console.log("candidate: ", e.candidate);
   ipcRenderer.send("forward", "puppet-candidate", e.candidate);
