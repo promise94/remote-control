@@ -20,6 +20,7 @@
     "wait-on": "^5.2.0"
   },
   "dependencies": {
+    "about-window": "^1.13.4",
     "electron-is-dev": "^1.2.0",
     "robotjs": "^0.6.0",
     "vkey": "^1.0.1",
