@@ -1,5 +1,5 @@
 {
-  "name": "remote-control",
+  "name": "mercurius",
   "version": "1.0.0",
   "description": "",
   "main": "app/main/index.js",
@@ -8,15 +8,20 @@
     "start": "concurrently \"npm run start:renderer\" \"wait-on http://localhost:3000 && npm run start:main\"",
     "start:main": "electron .",
     "start:renderer": "cd app/renderer/src/main && npm start",
-    "rebuild": "electron-rebuild"
+    "build": "cd ./app/renderer/src/main && npm run build",
+    "pack:mac": "npm run build && cross-env npm_config_electron_mirror=\"https://npm.taobao.org/mirrors/electron/\"  electron-builder build --mac",
+    "pack:win": "npm run build && cross-env npm_config_electron_mirror=\"https://npm.taobao.org/mirrors/electron/\"  electron-builder build -win --ia32",
+    "postinstall": "electron-builder install-app-deps"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^5.3.0",
+    "cross-env": "^7.0.3",
     "electron": "7.3.3",
-    "electron-rebuild": "^2.3.2",
+    "electron-builder": "^22.9.1",
+    "electron-builder-squirrel-windows": "^22.9.1",
     "wait-on": "^5.2.0"
   },
   "dependencies": {
@@ -25,5 +30,63 @@
     "robotjs": "^0.6.0",
     "vkey": "^1.0.1",
     "ws": "^7.4.0"
+  },
+  "build": {
+    "appId": "cn.nhlxw.www",
+    "productName": "Mercurius",
+    "files": "app",
+    "asar": false,
+    "extraFiles": [
+      "app/renderer/**/src"
+    ],
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    },
+    "copyright": "Copyright © 2020 xiaowei",
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "resources/icon.icns"
+    },
+    "dmg": {
+      "background": "resources/background.png",
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "contents": [
+        {
+          "x": 410,
+          "y": 180,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 180,
+          "type": "file"
+        }
+      ],
+      "iconSize": 128
+    },
+    "win": {
+      "icon": "resources/icon.ico",
+      "target": [
+        "squirrel",
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "language": "2052",
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    },
+    "squirrelWindows": {
+      "iconUrl": "https://raw.githubusercontent.com/dengyaolong/geektime-electron/master/img/icon.ico"
+    }
   }
 }
