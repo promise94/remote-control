@@ -2,7 +2,7 @@
  * @Author: lixiaowei
  * @Date: 2020-11-19 22:41:01
  * @LastEditors: lixiaowei
- * @LastEditTime: 2020-11-22 17:35:52
+ * @LastEditTime: 2020-12-10 22:34:36
  * @Description: file content
  * @FilePath: /signal/Users/lixiaowei/Documents/projects/Electron/geektime-electron/remote-control/app/main/trayAndMenu/darwin.js
  */
@@ -42,6 +42,7 @@ function setMenu() {
         { role: "hideOthers" },
         { role: "unhide" },
         { type: "separator" },
+        {role: "toggleDevTools"},
         { role: "quit" },
       ],
     },
