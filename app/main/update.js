@@ -2,11 +2,12 @@
  * @Author: lixiaowei
  * @Date: 2020-12-11 23:02:39
  * @LastEditors: lixiaowei
- * @LastEditTime: 2020-12-11 23:09:41
+ * @LastEditTime: 2020-12-12 21:29:14
  * @Description: file content
  * @FilePath: /signal/Users/lixiaowei/Documents/projects/Electron/geektime-electron/remote-control/app/main/update.js
  */
 const { autoUpdater, app, dialog } = require("electron");
+const util = require("util");
 
 if (process.platform == "darwin") {
   autoUpdater.setFeedURL(
@@ -41,5 +42,10 @@ autoUpdater.on("update-downloaded", (e, notes, releaseName, date, url) => {
 });
 
 autoUpdater.on("error", (e) => {
+  dialog.showMessageBox({
+    type: "info",
+    title: "升级出错",
+    message: util.inspect(e, true, 3, true)
+  })
   console.log("auto update error", e);
 });
