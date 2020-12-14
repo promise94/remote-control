@@ -2,7 +2,7 @@
  * @Author: lixiaowei
  * @Date: 2020-10-16 12:33:25
  * @LastEditors: lixiaowei
- * @LastEditTime: 2020-12-12 12:01:39
+ * @LastEditTime: 2020-12-14 10:58:09
  * @Description: file content
  * @FilePath: /signal/Users/lixiaowei/Documents/projects/Electron/geektime-electron/remote-control/app/main/index.js
  */
@@ -26,7 +26,10 @@ if (!gotAppInstanceLock) {
     showMainWindow();
   });
   app.on("will-finish-launching", () => {
-    require("./update");
+    if (!isDev) {
+      require("./updater.js");
+    }
+    require("./crash-reporter").init();
   });
   app.on("ready", () => {
     createMainWindow();
